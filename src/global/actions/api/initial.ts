@@ -1,5 +1,6 @@
 import type { ActionReturnType } from '../../types';
 import { ManagementProgress } from '../../../types';
+import { destroyPluginManager } from '../../../plugins/pluginManagerInstance';
 
 import {
   CUSTOM_BG_CACHE_NAME,
@@ -200,6 +201,8 @@ addActionHandler('saveSession', (global, actions, payload): ActionReturnType => 
 addActionHandler('signOut', async (global, actions, payload): Promise<void> => {
   if ('hangUp' in actions) actions.hangUp({ tabId: getCurrentTabId() });
   if ('leaveGroupCall' in actions) actions.leaveGroupCall({ tabId: getCurrentTabId() });
+
+  destroyPluginManager();
 
   try {
     resetInitialLocationHash();

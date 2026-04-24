@@ -29,6 +29,8 @@ import './ui/aiMessageEditor';
 import './ui/users';
 import './ui/settings';
 import './ui/misc';
+import './ui/plugins';
+import './api/plugins';
 import './ui/payments';
 import './ui/calls';
 import './ui/mediaViewer';

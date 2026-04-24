@@ -36,17 +36,18 @@ process.env.BASE_URL = process.env.BASE_URL || PRODUCTION_URL;
 const {
   BASE_URL,
   APP_TITLE = DEFAULT_APP_TITLE,
+  APP_PLUGINS_CONFIG_URL = 'https://prismagram.app/api/plugins/config',
 } = process.env;
 
 const CSP = `
   default-src 'self';
   connect-src 'self' wss://*.web.telegram.org blob: http: https: ${APP_ENV === 'development' ? 'wss: ipc:' : ''};
-  script-src 'self' 'wasm-unsafe-eval' https://t.me/_websync_ https://telegram.me/_websync_;
+  script-src 'self' blob 'wasm-unsafe-eval' https://t.me/_websync_ https://telegram.me/_websync_ http://localhost:8080;
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://ss3.4sqi.net/img/categories_v2/;
   media-src 'self' blob: data:;
   object-src 'none';
-  frame-src http: https:
+  frame-src blob: http: https:
     bitkeep: bnc: bybitapp: echooo: imtokenv2: mytonwallet-tc:
     nicegram-tc: safepal-tc: tonkeeper-pro-tc: tonkeeper-tc:;
   base-uri 'none';
@@ -231,6 +232,7 @@ export default function createConfig(
         // eslint-disable-next-line no-null/no-null
         TEST_SESSION: null,
         BASE_URL,
+        APP_PLUGINS_CONFIG_URL,
       }),
       // Updates each dev re-build to provide current git branch or commit hash
       new DefinePlugin({

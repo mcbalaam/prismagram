@@ -3184,6 +3184,20 @@ export interface ActionPayloads {
   openCocoonModal: WithTabId | undefined;
   closeCocoonModal: WithTabId | undefined;
 
+  // plugins
+  loadPlugin: { pluginId: string };
+  unloadPlugin: { pluginId: string };
+  setPluginDevMode: { isDevMode: boolean };
+  updatePluginRecords: { byId: Record<string, import('../../plugins/types').PluginRecord> };
+  installPlugin: {
+    manifest: import('../../plugins/types').PluginManifest;
+    grantedCapabilities: import('../../plugins/types').Capability[];
+    source: string;
+  };
+  removePlugin: { pluginId: string };
+  setPluginsDevConfigUrl: { url: string };
+  applyRemoteConfig: undefined;
+
   requestMessageMediaEditor: WithTabId | undefined;
   resetMessageMediaEditorRequest: WithTabId | undefined;
 }

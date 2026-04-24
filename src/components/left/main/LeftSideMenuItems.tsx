@@ -17,6 +17,7 @@ import {
   PRODUCTION_HOSTNAME,
   WEB_VERSION_BASE,
 } from '../../../config';
+import { SettingsScreens } from '../../../types';
 import {
   INITIAL_PERFORMANCE_STATE_MAX,
   INITIAL_PERFORMANCE_STATE_MED,
@@ -83,6 +84,7 @@ const LeftSideMenuItems = ({
     openChatByUsername,
     openUrl,
     openChatWithInfo,
+    openSettingsScreen,
   } = getActions();
   const lang = useLang();
 
@@ -143,6 +145,11 @@ const LeftSideMenuItems = ({
     openUrl({ url: FEEDBACK_URL });
   });
 
+  const handleSelectPlugins = useLastCallback(() => {
+    onSelectSettings();
+    openSettingsScreen({ screen: SettingsScreens.Plugins });
+  });
+
   return (
     <>
       {IS_MULTIACCOUNT_SUPPORTED && currentUser && (
@@ -199,6 +206,12 @@ const LeftSideMenuItems = ({
         onClick={onSelectSettings}
       >
         {lang('MenuSettings')}
+      </MenuItem>
+      <MenuItem
+        icon="bots"
+        onClick={handleSelectPlugins}
+      >
+        {lang('SettingsPlugins')}
       </MenuItem>
       <NestedMenuItem
         icon="more"

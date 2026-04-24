@@ -469,3 +469,5 @@ export const DEFAULT_RESALE_GIFTS_FILTER_OPTIONS: ResaleGiftsFilterOptions = {
 export const ACCOUNT_TTL_OPTIONS = [1, 3, 6, 12, 18, 24];
 
 export const SLOT_MACHINE_EMOJI = '🎰';
+
+export const PLUGINS_CONFIG_URL = process.env.APP_PLUGINS_CONFIG_URL || 'https://prismagram.app/api/plugins/config'

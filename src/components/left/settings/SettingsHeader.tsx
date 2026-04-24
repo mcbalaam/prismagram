@@ -257,6 +257,12 @@ const SettingsHeader: FC<OwnProps> = ({
       case SettingsScreens.Passkeys:
         return <h3>{lang('SettingsPasskeyTitle')}</h3>;
 
+      case SettingsScreens.Plugins:
+        return <h3>{lang('SettingsPlugins')}</h3>;
+
+      case SettingsScreens.PluginDetails:
+        return <h3>{lang('SettingsPlugins')}</h3>;
+
       default:
         return (
           <div className="settings-main-header">

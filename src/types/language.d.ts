@@ -2100,6 +2100,31 @@ export interface LangPair {
   'AiMessageEditorFrom': undefined;
   'AiMessageEditorTo': undefined;
   'ButtonHelp': undefined;
+  'SettingsPlugins': undefined;
+  'SettingsPluginsDevMode': undefined;
+  'SettingsPluginsDevModeHint': undefined;
+  'SettingsPluginsNoPlugins': undefined;
+  'SettingsPluginsNoPluginsHint': undefined;
+  'SettingsPluginsActive': undefined;
+  'SettingsPluginsInactive': undefined;
+  'SettingsPluginsError': undefined;
+  'SettingsPluginsLoading': undefined;
+  'SettingsPluginPermissions': undefined;
+  'SettingsPluginDisable': undefined;
+  'SettingsPluginEnable': undefined;
+  'SettingsPluginNoPermissions': undefined;
+  'SettingsPluginsAdd': undefined;
+  'SettingsPluginsUseRemoteConfig': undefined;
+  'SettingsPluginsDevConfigUrl': undefined;
+  'SettingsPluginsDevConfigUrlHint': undefined;
+  'SettingsPluginsAddTitle': undefined;
+  'SettingsPluginsAddUrl': undefined;
+  'SettingsPluginsAddFetch': undefined;
+  'SettingsPluginsAddInstall': undefined;
+  'SettingsPluginsAddCancel': undefined;
+  'SettingsPluginsAddPermRequired': undefined;
+  'SettingsPluginsAddPermOptional': undefined;
+  'SettingsPluginsRemove': undefined;
 }
 
 export interface LangPairWithVariables<V = LangVariable> {
@@ -3688,6 +3713,15 @@ export interface LangPairWithVariables<V = LangVariable> {
   };
   'UnofficialSecurityRisk': {
     'peer': V;
+  };
+  'SettingsPluginVersion': {
+    'version': V;
+  };
+  'SettingsPluginBy': {
+    'author': V;
+  };
+  'SettingsPluginsAddFetchError': {
+    'error': V;
   };
 }
 

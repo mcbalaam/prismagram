@@ -40,6 +40,8 @@ import SettingsPrivacyVisibilityExceptionList from './SettingsPrivacyVisibilityE
 import SettingsQuickReaction from './SettingsQuickReaction';
 import SettingsStickers from './SettingsStickers';
 import SettingsTwoFa from './twoFa/SettingsTwoFa';
+import SettingsPlugins from './SettingsPlugins';
+import SettingsPluginDetails from './SettingsPluginDetails';
 
 import './Settings.scss';
 
@@ -87,6 +89,10 @@ const PRIVACY_SCREENS = [
   SettingsScreens.PrivacyBlockedUsers,
   SettingsScreens.ActiveWebsites,
   SettingsScreens.Passkeys,
+];
+
+const PLUGINS_SCREENS = [
+  SettingsScreens.PluginDetails,
 ];
 
 const PRIVACY_PHONE_NUMBER_SCREENS = [
@@ -173,6 +179,7 @@ const Settings: FC<OwnProps> = ({
 
   const [twoFaState, twoFaDispatch] = useTwoFaReducer();
   const [privacyPasscode, setPrivacyPasscode] = useState<string>('');
+  const [selectedPluginId, setSelectedPluginId] = useState<string>('');
 
   useScrollNotch({
     containerRef,
@@ -492,6 +499,24 @@ const Settings: FC<OwnProps> = ({
         return (
           <SettingsPasskeys
             isActive={isScreenActive}
+            onReset={handleReset}
+          />
+        );
+
+      case SettingsScreens.Plugins:
+        return (
+          <SettingsPlugins
+            isActive={isScreenActive || PLUGINS_SCREENS.includes(activeScreen)}
+            onReset={handleReset}
+            onSelectPlugin={setSelectedPluginId}
+          />
+        );
+
+      case SettingsScreens.PluginDetails:
+        return (
+          <SettingsPluginDetails
+            isActive={isScreenActive}
+            pluginId={selectedPluginId}
             onReset={handleReset}
           />
         );

@@ -2,6 +2,8 @@ import type {
   ApiMediaExtendedPreview, ApiMessage, ApiReactions,
   MediaContent,
 } from '../../../api/types';
+import { broadcastDeleteEvent, broadcastMessageEvent } from '../../../plugins/eventBus';
+import { normalizeMessage } from '../../../plugins/normalizer';
 import type { ActiveEmojiInteraction, ThreadId } from '../../../types';
 import type { RequiredGlobalActions } from '../../index';
 import type {
@@ -260,6 +262,15 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
         }
       }
 
+      const pluginMessage = normalizeMessage(message);
+      const pluginChat = chat ? { id: Number(chat.id), title: chat.title } : undefined;
+      console.log("IS OUTGOUING: ", message.isOutgoing)
+      broadcastMessageEvent(
+        message.isOutgoing ? 'message:sent' : 'message:received',
+        pluginMessage,
+        pluginChat,
+      );
+
       break;
     }
 
@@ -434,6 +445,18 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       global = updateWithLocalMedia(global, chatId, id, false, message);
 
       setGlobal(global);
+
+      if (message.isEdited) {
+        const editedMessage = selectChatMessage(global, chatId, id);
+        if (editedMessage) {
+          const pluginChat = selectChat(global, chatId);
+          broadcastMessageEvent(
+            'message:edited',
+            normalizeMessage(editedMessage),
+            pluginChat ? { id: Number(pluginChat.id), title: pluginChat.title } : undefined,
+          );
+        }
+      }
 
       break;
     }
@@ -689,6 +712,7 @@ addActionHandler('apiUpdate', (global, actions, update): ActionReturnType => {
       const { ids, chatId } = update;
 
       deleteMessages(global, chatId, ids, actions);
+      broadcastDeleteEvent(Number(chatId), ids);
       break;
     }
 

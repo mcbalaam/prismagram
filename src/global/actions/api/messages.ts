@@ -174,6 +174,7 @@ import {
   selectThreadReadState,
 } from '../../selectors/threads';
 import { deleteMessages, updateWithLocalMedia } from '../apiUpdaters/messages';
+import { callBeforeMessageHook } from '../../../plugins/eventBus';
 const AUTOLOGIN_TOKEN_KEY = 'autologin_token';
 
 const uploadProgressCallbacks = new Map<MessageKey, ApiOnProgress>();
@@ -1955,6 +1956,18 @@ async function sendMessageOrReduceLocal<T extends GlobalState>(
 }
 
 async function sendMessage<T extends GlobalState>(global: T, params: SendMessageParams) {
+  const shouldCancel = await callBeforeMessageHook({
+    chatId: params.chat.id,
+    text: params.text,
+    entities: params.entities,
+    replyInfo: params.replyInfo,
+    attachment: params.attachment,
+  });
+  if (shouldCancel) {
+    // ничего не создаём, не отправляем в воркер
+    return;
+  }
+
   // @optimization
   if (params.replyInfo || IS_IOS) {
     await rafPromise();

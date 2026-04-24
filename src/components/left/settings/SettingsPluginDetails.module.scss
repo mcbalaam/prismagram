@@ -1,0 +1,47 @@
+.header {
+  padding: 1rem 1.5rem 0.5rem;
+}
+
+.description {
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.meta {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.error {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-error);
+}
+
+.sectionTitle {
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.noPermissions {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  padding: 0 0.5rem;
+}
+
+.permission {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  font-family: var(--font-family-monospace, monospace);
+  color: var(--color-text-secondary);
+
+  & + & {
+    border-top: 0.0625rem solid var(--color-borders);
+  }
+}

@@ -177,6 +177,7 @@ import useVoiceRecording from '../middle/composer/hooks/useVoiceRecording';
 
 import AttachmentModal from '../middle/composer/AttachmentModal.async';
 import AttachMenu from '../middle/composer/AttachMenu';
+import PluginSlot from '../plugins/PluginSlot';
 import BotCommandMenu from '../middle/composer/BotCommandMenu.async';
 import BotKeyboardMenu from '../middle/composer/BotKeyboardMenu';
 import BotMenuButton from '../middle/composer/BotMenuButton';
@@ -2467,6 +2468,11 @@ const Composer = ({
                         <Icon name="bot-command" />
                       </ResponsiveHoverButton>
                     )}
+                    <PluginSlot
+                      slotId="compose-bar:actions"
+                      variant="button"
+                      className="composer-action-button"
+                    />
                   </>
                 )}
               </Transition>

@@ -8,6 +8,7 @@ import type {
   ApiUpdateSession,
   ApiUpdateUserAlreadyAuthorized,
 } from '../../../api/types';
+import { initPluginManager } from '../../../plugins/pluginManagerInstance';
 import type { LangCode } from '../../../types';
 import type { RequiredGlobalActions } from '../../index';
 import type { ActionReturnType, GlobalState } from '../../types';
@@ -179,6 +180,7 @@ function onUpdateAuthorizationState<T extends GlobalState>(global: T, update: Ap
       }
 
       void forceWebsync(true);
+      initPluginManager();
 
       global = updateAuth(global, {
         isLoggingOut: false,

@@ -278,6 +278,8 @@ export enum SettingsScreens {
   DoNotTranslate,
   FoldersShare,
   Passkeys,
+  Plugins,
+  PluginDetails,
 }
 
 export type StickerSetOrReactionsSetOrRecent = Pick<ApiStickerSet, (
@@ -763,7 +765,7 @@ export type ResaleGiftsFilterOptions = {
 };
 
 export type SendMessageParams = {
-  chat?: ApiChat;
+  chat: ApiChat;
   attachments?: ApiAttachment[];
   lastMessageId?: number;
   text?: string;

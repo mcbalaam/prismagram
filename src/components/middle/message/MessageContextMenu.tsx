@@ -47,6 +47,7 @@ import Skeleton from '../../ui/placeholder/Skeleton';
 import LastEditTimeMenuItem from './LastEditTimeMenuItem';
 import ReactionSelector from './reactions/ReactionSelector';
 import ReadTimeMenuItem from './ReadTimeMenuItem';
+import PluginSlot from '../../plugins/PluginSlot';
 
 import './MessageContextMenu.scss';
 
@@ -508,6 +509,11 @@ const MessageContextMenu: FC<OwnProps> = ({
         {canForward && <MenuItem icon="forward" onClick={onForward}>{oldLang('Forward')}</MenuItem>}
         {canSelect && <MenuItem icon="select" onClick={onSelect}>{oldLang('Common.Select')}</MenuItem>}
         {canReport && <MenuItem icon="flag" onClick={onReport}>{oldLang('lng_context_report_msg')}</MenuItem>}
+        <PluginSlot
+          slotId="message:actions"
+          variant="menu-item"
+          context={{ messageId: message.id, chatId: Number(message.chatId) }}
+        />
         {canDelete && <MenuItem destructive icon="delete" onClick={onDelete}>{oldLang('Delete')}</MenuItem>}
         {hasCustomEmoji && (
           <>

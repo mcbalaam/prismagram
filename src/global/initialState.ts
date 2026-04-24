@@ -111,6 +111,11 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
   shouldShowContextMenuHint: true,
   appConfig: DEFAULT_APP_CONFIG,
 
+  plugins: {
+    byId: {},
+    isDevMode: false,
+  },
+
   audioPlayer: {
     volume: DEFAULT_VOLUME,
     lastPlaybackRate: DEFAULT_PLAYBACK_RATE,

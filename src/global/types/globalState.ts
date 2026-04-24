@@ -80,6 +80,7 @@ import type {
 import type { RegularLangFnParameters } from '../../util/localization';
 import type { SharedState } from './sharedState';
 import type { TabState } from './tabState';
+import type { PluginRecord } from '../../plugins/types';
 
 export type GlobalState = {
   cacheVersion: number;
@@ -105,6 +106,12 @@ export type GlobalState = {
   initialUnreadNotifications?: number;
   shouldShowContextMenuHint?: boolean;
   botFreezeAppealId?: string;
+
+  plugins: {
+    byId: Record<string, PluginRecord>;
+    isDevMode: boolean;
+    devConfigUrl?: string;
+  };
 
   audioPlayer: {
     volume: number;
