@@ -8,6 +8,7 @@ import type {
   SlotId,
 } from './types';
 import { PluginRpcChannel } from './rpc/channel';
+import { PRISMA_SDK_SOURCE } from './sdk/prisma-sdk-source';
 import { checkCapability, checkEventCapability } from './capabilities';
 import { registerTarget, unregisterTarget, subscribe, unsubscribe } from './eventBus';
 import { registerBeforeHook, unregisterBeforeHook, callBeforeMessageHook } from './eventBus';
@@ -88,11 +89,11 @@ export class PluginHost {
   }
 
   // Generates a sandboxed HTML wrapper that loads the plugin JS.
-  // Host origin and plugin ID are passed via URL fragment so no inline script is needed,
-  // keeping the blob URL compliant with strict script-src CSP.
+  // The SDK is injected inline before the plugin script — blob documents do not inherit
+  // the parent page's CSP headers, so inline scripts are safe here.
   private createIframe(jsUrl: string): HTMLIFrameElement {
     const bustUrl = `${jsUrl}${jsUrl.includes('?')? '&' : '?'}_=${Date.now()}`;
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script src=${JSON.stringify(bustUrl)}></script></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>${PRISMA_SDK_SOURCE}</script><script src=${JSON.stringify(bustUrl)}></script></body></html>`;
     this.blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const iframe = document.createElement('iframe');
     iframe.src = this.blobUrl;
