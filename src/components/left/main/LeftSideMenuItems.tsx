@@ -1,5 +1,5 @@
 import type React from '../../../lib/teact/teact';
-import { memo, useMemo } from '../../../lib/teact/teact';
+import { memo, useEffect, useMemo, useRef } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
 import type { ApiUser } from '../../../api/types';
@@ -35,6 +35,7 @@ import { useFolderManagerForUnreadCounters } from '../../../hooks/useFolderManag
 import useLang from '../../../hooks/useLang';
 import useLastCallback from '../../../hooks/useLastCallback';
 
+import { mountZone, unmountZone } from '../../../prisma/dom/zoneRegistry';
 import AttachBotItem from '../../middle/composer/AttachBotItem';
 import MenuItem from '../../ui/MenuItem';
 import MenuSeparator from '../../ui/MenuSeparator';
@@ -42,6 +43,7 @@ import NestedMenuItem from '../../ui/NestedMenuItem';
 import Switcher from '../../ui/Switcher';
 import Toggle from '../../ui/Toggle';
 import AccountMenuItems from './AccountMenuItems';
+import PluginSlot from '../../plugins/PluginSlot';
 
 type OwnProps = {
   onSelectSettings: NoneToVoidFunction;
@@ -150,8 +152,17 @@ const LeftSideMenuItems = ({
     openSettingsScreen({ screen: SettingsScreens.Plugins });
   });
 
+  const zoneAnchorRef = useRef<HTMLSpanElement>();
+  useEffect(() => {
+    const el = zoneAnchorRef.current?.parentElement;
+    if (!el) return;
+    mountZone('sidebar:menu', el);
+    return () => unmountZone('sidebar:menu');
+  }, []);
+
   return (
     <>
+      <span ref={zoneAnchorRef} />
       {IS_MULTIACCOUNT_SUPPORTED && currentUser && (
         <>
           <AccountMenuItems
@@ -213,6 +224,7 @@ const LeftSideMenuItems = ({
       >
         {lang('SettingsPlugins')}
       </MenuItem>
+      <PluginSlot slotId="sidebar:menu" variant="menu-item" />
       <NestedMenuItem
         icon="more"
         footer={footer}

@@ -78,6 +78,35 @@ interface BeforeMessageSentResult {
   cancel: boolean;
 }
 
+interface DomHandle {
+  handleId: string;
+}
+
+interface DomApi {
+  /** Subscribe to zone lifecycle. onMount fires immediately if zone is already active. */
+  watchZone(zone: string, onMount: () => void, onUnmount?: () => void): Promise<unknown>;
+  /** Find first matching element in zone. Returns handle or undefined. */
+  query(zone: string, selector: string): Promise<DomHandle | undefined>;
+  /** Find all matching elements in zone. */
+  queryAll(zone: string, selector: string): Promise<{ handleIds: string[] }>;
+  /** Create element. tag must be in allowed list (div, span, button, p, img, hr, ul, li, a). */
+  createElement(tag: string, props?: { text?: string; className?: string }): Promise<DomHandle | undefined>;
+  /** Set CSS property. Only allowed props/values pass through. */
+  setStyle(handleId: string, prop: string, value: string): Promise<unknown>;
+  /** Add prefixed class to element. */
+  addClass(handleId: string, className: string): Promise<unknown>;
+  /** Set textContent. */
+  setText(handleId: string, text: string): Promise<unknown>;
+  /** Append plugin-created child to parent. */
+  appendChild(parentId: string, childId: string): Promise<unknown>;
+  /** Insert plugin-created element before reference element. */
+  insertBefore(refId: string, newId: string): Promise<unknown>;
+  /** Remove plugin-created element. */
+  remove(handleId: string): Promise<unknown>;
+  /** Listen to DOM event. Callback receives { listenerId, type }. */
+  on(handleId: string, event: string, callback: (data: { listenerId: string; type: string }) => void): Promise<unknown>;
+}
+
 interface PrismaSDKApi {
   readonly pluginId: string;
   readonly capabilities: Capability[];
@@ -94,15 +123,6 @@ interface PrismaSDKApi {
   /**
    * Register a method the host can invoke on this plugin.
    * handler receives the first argument directly, not a params array.
-   *
-   * @example
-   * PrismaSDK.register('beforeMessageSent', async ({ text, chatId }) => {
-   *   if (text === '!ping') {
-   *     await PrismaSDK.call('messages.send', chatId, 'pong');
-   *     return { cancel: true };
-   *   }
-   *   return { cancel: false };
-   * });
    */
   register(method: 'beforeMessageSent', handler: (params: BeforeMessageSentParams) => Promise<BeforeMessageSentResult>): void;
   register(method: string, handler: (params: unknown) => Promise<unknown>): void;
@@ -112,6 +132,9 @@ interface PrismaSDKApi {
 
   /** Handle slot click events triggered by the host. */
   onSlotClick(handler: (event: SlotClickEvent) => void): void;
+
+  /** DOM Proxy API — requires ui:dom capability in manifest. */
+  dom: DomApi;
 }
 
 declare global {

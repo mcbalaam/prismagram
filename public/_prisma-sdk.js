@@ -1,7 +1,3 @@
-// Self-contained SDK injected inline into each plugin iframe before the plugin script runs.
-// Written as a plain JS string to avoid bundler processing — this code runs in a sandboxed
-// blob document which has no module system and does not inherit the app's scope.
-export const PRISMA_SDK_SOURCE = `
 (function () {
   'use strict';
 
@@ -107,7 +103,23 @@ export const PRISMA_SDK_SOURCE = `
     }
 
     if (msg.type === 'rpc:event') {
-      (_eventHandlers.get(msg.name) || []).forEach(function (h) { h(msg.data); });
+      var name = msg.name;
+      var data = msg.data;
+      if (name === 'dom:zone:mount' || name === 'dom:zone:unmount') {
+        var zoneCbs = _zoneWatchers.get(data && data.zone);
+        if (zoneCbs) {
+          if (name === 'dom:zone:mount') { if (zoneCbs.onMount) zoneCbs.onMount(); }
+          else { if (zoneCbs.onUnmount) zoneCbs.onUnmount(); }
+        }
+      } else if (name === 'dom:observer:match') {
+        var obsCb = _domObservers.get(data && data.observerId);
+        if (obsCb) obsCb(data);
+      } else if (name === 'dom:event') {
+        var domCb = _domListeners.get(data && data.listenerId);
+        if (domCb) domCb(data);
+      } else {
+        (_eventHandlers.get(name) || []).forEach(function (h) { h(data); });
+      }
       return;
     }
 
@@ -119,6 +131,57 @@ export const PRISMA_SDK_SOURCE = `
 
   window.parent.postMessage({ type: 'rpc:handshake', pluginId: '' }, '*');
 
+  var _zoneWatchers = new Map();
+  var _domListeners = new Map();
+  var _domObservers = new Map();
+
+  var dom = {
+    watchZone: function (zone, onMount, onUnmount) {
+      _zoneWatchers.set(zone, { onMount: onMount, onUnmount: onUnmount });
+      return call('dom.watchZone', zone);
+    },
+    query: function (zone, selector) {
+      return call('dom.query', zone, selector);
+    },
+    queryAll: function (zone, selector) {
+      return call('dom.queryAll', zone, selector);
+    },
+    createElement: function (tag, props) {
+      return call('dom.createElement', tag, props || {});
+    },
+    setStyle: function (handleId, prop, value) {
+      return call('dom.setStyle', handleId, prop, value);
+    },
+    addClass: function (handleId, className) {
+      return call('dom.addClass', handleId, className);
+    },
+    setText: function (handleId, text) {
+      return call('dom.setText', handleId, text);
+    },
+    appendChild: function (parentId, childId) {
+      return call('dom.appendChild', parentId, childId);
+    },
+    insertBefore: function (refId, newId) {
+      return call('dom.insertBefore', refId, newId);
+    },
+    remove: function (handleId) {
+      return call('dom.remove', handleId);
+    },
+    on: function (handleId, event, callback) {
+      var listenerId = _generateId();
+      _domListeners.set(listenerId, callback);
+      return call('dom.on', handleId, event, listenerId);
+    },
+    observeSelector: function (zone, selector, callback) {
+      var observerId = _generateId();
+      _domObservers.set(observerId, callback);
+      return call('dom.observeSelector', zone, selector, observerId);
+    },
+    injectStyle: function (css) {
+      return call('dom.injectStyle', css);
+    },
+  };
+
   window.PrismaSDK = {
     get pluginId() { return _pluginId; },
     get capabilities() { return _capabilities; },
@@ -128,6 +191,6 @@ export const PRISMA_SDK_SOURCE = `
     register: register,
     ready: ready,
     onSlotClick: onSlotClick,
+    dom: dom,
   };
 })();
-`;

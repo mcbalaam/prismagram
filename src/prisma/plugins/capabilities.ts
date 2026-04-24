@@ -11,6 +11,19 @@ const METHOD_CAPABILITY_MAP: Record<HostApiMethod, Capability> = {
   'storage.getAll': 'storage:config',
   'ui.registerSlot': 'ui:slot:*',
   'ui.unregisterSlot': 'ui:slot:*',
+  'dom.watchZone': 'ui:dom',
+  'dom.query': 'ui:dom',
+  'dom.queryAll': 'ui:dom',
+  'dom.createElement': 'ui:dom',
+  'dom.setStyle': 'ui:dom',
+  'dom.addClass': 'ui:dom',
+  'dom.setText': 'ui:dom',
+  'dom.appendChild': 'ui:dom',
+  'dom.insertBefore': 'ui:dom',
+  'dom.remove': 'ui:dom',
+  'dom.on': 'ui:dom',
+  'dom.observeSelector': 'ui:dom',
+  'dom.injectStyle': 'ui:dom',
 };
 
 export function checkCapability(

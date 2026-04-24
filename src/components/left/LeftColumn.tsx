@@ -3,6 +3,7 @@ import type {
 import {
   memo, useEffect, useMemo, useState,
 } from '@teact';
+import { mountZone, unmountZone } from '../../prisma/dom/zoneRegistry';
 import { getActions, withGlobal } from '../../global';
 
 import type { GlobalState } from '../../global/types';
@@ -559,6 +560,13 @@ function LeftColumn({
         );
     }
   }
+
+  useEffect(() => {
+    const el = document.getElementById('LeftColumn');
+    if (!el) return;
+    mountZone('left-column', el);
+    return () => unmountZone('left-column');
+  }, []);
 
   return (
     <Transition

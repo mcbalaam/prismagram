@@ -8,7 +8,7 @@ import type {
   SlotId,
 } from '../types';
 import { PluginRpcChannel } from '../rpc/channel';
-import { PRISMA_SDK_SOURCE } from '../sdk/prisma-sdk-source';
+import { DomProxy } from '../dom/domProxy';
 import { checkCapability, checkEventCapability } from './capabilities';
 import { registerTarget, unregisterTarget, subscribe, unsubscribe } from '../eventBus';
 import { registerBeforeHook, unregisterBeforeHook, callBeforeMessageHook } from '../eventBus';
@@ -38,6 +38,7 @@ export class PluginHost {
   private timeoutCounts = new Map<string, number>();
   private isDestroyed = false;
   private blobUrl?: string;
+  private domProxy: DomProxy;
 
   constructor(
     manifest: PluginManifest,
@@ -51,9 +52,8 @@ export class PluginHost {
     console.log('[PluginHost] constructor, pluginId:', this.manifest.id);
     registerBeforeHook(this.manifest.id, async (params) => {
       const result = await this.channel.call('beforeMessageSent', params);
-      // Приводим к нужному типу
-      const cancel = typeof result === 'object' && result !== null && 'cancel' in result 
-        ? Boolean((result as { cancel?: boolean }).cancel) 
+      const cancel = typeof result === 'object' && result !== null && 'cancel' in result
+        ? Boolean((result as { cancel?: boolean }).cancel)
         : false;
       return { cancel };
     });
@@ -62,6 +62,12 @@ export class PluginHost {
     // Blob-URL iframe is sandboxed → effective origin is always 'null'.
     // PluginRpcChannel allows 'null' and validates via window reference check.
     this.channel = new PluginRpcChannel(this.iframe, 'null', manifest.id);
+
+    this.domProxy = new DomProxy(
+      manifest.id,
+      (name, data) => this.channel.pushEvent(name as PluginEventName, data as PluginEventPayload),
+    );
+    this.domProxy.registerHandlers(this.channel);
 
     this.registerHandlers(apiHandlers);
     registerTarget(manifest.id, (name, data) => this.channel.pushEvent(name, data));
@@ -77,6 +83,7 @@ export class PluginHost {
     if (this.isDestroyed) return;
     this.isDestroyed = true;
     this.channel.destroy();
+    this.domProxy.destroy();
     unregisterTarget(this.manifest.id);
     unregisterClickHandler(this.manifest.id);
     unregisterAllForPlugin(this.manifest.id);
@@ -88,12 +95,14 @@ export class PluginHost {
     unregisterBeforeHook(this.manifest.id);
   }
 
-  // Generates a sandboxed HTML wrapper that loads the plugin JS.
-  // The SDK is injected inline before the plugin script — blob documents do not inherit
-  // the parent page's CSP headers, so inline scripts are safe here.
+  // Generates a sandboxed HTML wrapper that loads the SDK and plugin JS.
+  // Blob documents inherit the parent page's CSP — inline scripts and blob: sub-resources
+  // are both blocked (null-origin sandbox can't fetch parent-created blob: URLs).
+  // The SDK is served as /prisma-sdk.js from the app origin ('self' in CSP).
   private createIframe(jsUrl: string): HTMLIFrameElement {
-    const bustUrl = `${jsUrl}${jsUrl.includes('?')? '&' : '?'}_=${Date.now()}`;
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>${PRISMA_SDK_SOURCE}</script><script src=${JSON.stringify(bustUrl)}></script></body></html>`;
+    const bustUrl = `${jsUrl}${jsUrl.includes('?') ? '&' : '?'}_=${Date.now()}`;
+    const sdkUrl = `${window.location.origin}/_prisma-sdk.js`;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script src=${JSON.stringify(sdkUrl)}></script><script src=${JSON.stringify(bustUrl)}></script></body></html>`;
     this.blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const iframe = document.createElement('iframe');
     iframe.src = this.blobUrl;

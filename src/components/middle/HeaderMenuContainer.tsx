@@ -1,6 +1,6 @@
 import type { FC } from '../../lib/teact/teact';
 import {
-  memo, useEffect, useMemo, useState,
+  memo, useEffect, useMemo, useRef, useState,
 } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
@@ -55,12 +55,14 @@ import useOldLang from '../../hooks/useOldLang';
 import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
 import useShowTransitionDeprecated from '../../hooks/useShowTransitionDeprecated';
 
+import { mountZone, unmountZone } from '../../prisma/dom/zoneRegistry';
 import DeleteChatModal from '../common/DeleteChatModal';
 import MuteChatModal from '../left/MuteChatModal.async';
 import Menu from '../ui/Menu';
 import MenuItem from '../ui/MenuItem';
 import MenuSeparator from '../ui/MenuSeparator';
 import Portal from '../ui/Portal';
+import PluginSlot from '../plugins/PluginSlot';
 
 import './HeaderMenuContainer.scss';
 
@@ -234,12 +236,19 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
   const { isMobile } = useAppLayout();
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [shouldCloseFast, setShouldCloseFast] = useState(false);
+  const menuContainerRef = useRef<HTMLDivElement>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isMuteModalOpen, setIsMuteModalOpen] = useState(false);
   const [shouldRenderMuteModal, markRenderMuteModal, unmarkRenderMuteModal] = useFlag();
   const { x, y } = anchor;
 
   useShowTransitionDeprecated(isOpen, onCloseAnimationEnd, undefined, false);
+
+  useEffect(() => {
+    if (!isMenuOpen || !menuContainerRef.current) return;
+    mountZone('chat-header:menu', menuContainerRef.current);
+    return () => unmountZone('chat-header:menu');
+  }, [isMenuOpen]);
   const isViewGroupInfoShown = usePrevDuringAnimation(
     (!isChatInfoShown && isForum) ? true : undefined, CLOSE_MENU_ANIMATION_DURATION,
   );
@@ -591,7 +600,7 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
 
   return (
     <Portal>
-      <div className="HeaderMenuContainer">
+      <div ref={menuContainerRef} className="HeaderMenuContainer">
         <Menu
           isOpen={isMenuOpen}
           positionX="right"
@@ -838,6 +847,7 @@ const HeaderMenuContainer: FC<OwnProps & StateProps> = ({
               {isBlocked ? oldLang('Unblock') : oldLang('BlockUser')}
             </MenuItem>
           )}
+          <PluginSlot slotId="chat-header:actions" variant="menu-item" />
           {canLeave && (
             <>
               <MenuSeparator />

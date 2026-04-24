@@ -30,6 +30,7 @@ import { disableScrolling } from '../../../util/scrollLock';
 import { REM } from '../../common/helpers/mediaDimensions';
 import renderText from '../../common/helpers/renderText';
 import { getMessageCopyOptions } from './helpers/copyOptions';
+import { mountZone, unmountZone } from '../../../prisma/dom/zoneRegistry';
 
 import useAppLayout from '../../../hooks/useAppLayout';
 import useFlag from '../../../hooks/useFlag';
@@ -261,6 +262,12 @@ const MessageContextMenu: FC<OwnProps> = ({
 
   const [isReady, markIsReady, unmarkIsReady] = useFlag();
   const { isMobile } = useAppLayout();
+
+  useEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+    mountZone('message:context-menu', menuRef.current);
+    return () => unmountZone('message:context-menu');
+  }, [isOpen]);
   const seenByDatesCount = useMemo(() => (seenByDates ? Object.keys(seenByDates).length : 0), [seenByDates]);
   const totalSeenCount = useMemo(() => {
     const ids = new Set(seenByDates ? Object.keys(seenByDates) : []);

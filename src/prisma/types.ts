@@ -10,6 +10,7 @@ export type Capability =
   | `ui:slot:${string}`
   | `ui:inspect:${string}`
   | 'ui:theme'
+  | 'ui:dom'
   | `network:${string}`
   | 'storage:config';
 
@@ -88,7 +89,13 @@ export type UiEventName =
   | 'ui:compose:focused'
   | 'ui:compose:blurred';
 
-export type PluginEventName = MessageEventName | UiEventName;
+export type DomEventName =
+  | 'dom:zone:mount'
+  | 'dom:zone:unmount'
+  | 'dom:event'
+  | 'dom:observer:match';
+
+export type PluginEventName = MessageEventName | UiEventName | DomEventName;
 
 export type MessageEventPayload = {
   message: PluginMessage;
@@ -105,7 +112,17 @@ export type UiEventPayload = {
   folderId?: number;
 };
 
-export type PluginEventPayload = MessageEventPayload | MessageDeletedPayload | UiEventPayload;
+export type DomZoneMountPayload = { zone: string };
+export type DomZoneUnmountPayload = { zone: string };
+export type DomEventPayload = { listenerId: string; type: string };
+
+export type PluginEventPayload =
+  | MessageEventPayload
+  | MessageDeletedPayload
+  | UiEventPayload
+  | DomZoneMountPayload
+  | DomZoneUnmountPayload
+  | DomEventPayload;
 
 export type EventFilter = {
   chats?: number[];
@@ -186,14 +203,27 @@ export type PluginToHostMessage =
 export type HostApiMethod =
   | 'messages.send'
   | 'messages.getActive'
-  | 'messages.delete'        // добавим для полноты
+  | 'messages.delete'
   | 'events.subscribe'
   | 'events.unsubscribe'
   | 'storage.get'
   | 'storage.set'
   | 'storage.getAll'
   | 'ui.registerSlot'
-  | 'ui.unregisterSlot';
+  | 'ui.unregisterSlot'
+  | 'dom.watchZone'
+  | 'dom.query'
+  | 'dom.queryAll'
+  | 'dom.createElement'
+  | 'dom.setStyle'
+  | 'dom.addClass'
+  | 'dom.setText'
+  | 'dom.appendChild'
+  | 'dom.insertBefore'
+  | 'dom.remove'
+  | 'dom.on'
+  | 'dom.observeSelector'
+  | 'dom.injectStyle';
 
 export type HostApiParams = {
   'messages.send': [chatId: number, text: string];
@@ -206,6 +236,19 @@ export type HostApiParams = {
   'storage.getAll': [];
   'ui.registerSlot': [slotId: string, contribution: SlotContribution];
   'ui.unregisterSlot': [slotId: string, contributionId: string];
+  'dom.watchZone': [zone: string];
+  'dom.query': [zone: string, selector: string];
+  'dom.queryAll': [zone: string, selector: string];
+  'dom.createElement': [tag: string, props: { text?: string; className?: string }];
+  'dom.setStyle': [handleId: string, prop: string, value: string];
+  'dom.addClass': [handleId: string, className: string];
+  'dom.setText': [handleId: string, text: string];
+  'dom.appendChild': [parentId: string, childId: string];
+  'dom.insertBefore': [refId: string, newId: string];
+  'dom.remove': [handleId: string];
+  'dom.on': [handleId: string, event: string, listenerId: string];
+  'dom.observeSelector': [zone: string, selector: string, observerId: string];
+  'dom.injectStyle': [css: string];
 };
 
 // ---- UI Slots ----
@@ -215,6 +258,7 @@ export type SlotId =
   | 'message:actions'
   | 'message:footer'
   | 'chat-header:actions'
+  | 'sidebar:menu'
   | 'sidebar:panels'
   | 'settings:sections'
   | 'command-palette';
