@@ -1,4 +1,4 @@
-import type { Capability, PluginManifest, PluginRecord } from './types';
+import type { Capability, PluginManifest, PluginRecord } from '../types';
 import type { HostApiHandlers } from './PluginHost';
 import { PluginHost } from './PluginHost';
 import { resolveGrantedCapabilities } from './capabilities';

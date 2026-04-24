@@ -1,7 +1,7 @@
 import { memo, useState } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
-import type { PluginRecord } from '../../../plugins/types';
+import type { PluginRecord } from '../../../prisma/types';
 import { SettingsScreens } from '../../../types';
 
 import useFlag from '../../../hooks/useFlag';

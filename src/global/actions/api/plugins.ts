@@ -1,5 +1,5 @@
 import { PLUGINS_CONFIG_URL } from '../../../config';
-import { fetchManifest, fetchRemoteConfig } from '../../../plugins/manifestFetcher';
+import { fetchManifest, fetchRemoteConfig } from '../../../prisma/plugins/manifestFetcher';
 import { addActionHandler, getGlobal } from '../../index';
 
 addActionHandler('applyRemoteConfig', async (global, actions): Promise<void> => {

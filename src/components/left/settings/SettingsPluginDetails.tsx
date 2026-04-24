@@ -1,7 +1,7 @@
 import { memo } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
-import type { PluginRecord } from '../../../plugins/types';
+import type { PluginRecord } from '../../../prisma/types';
 
 import useHistoryBack from '../../../hooks/useHistoryBack';
 import useLang from '../../../hooks/useLang';

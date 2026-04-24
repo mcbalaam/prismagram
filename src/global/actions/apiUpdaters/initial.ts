@@ -8,7 +8,7 @@ import type {
   ApiUpdateSession,
   ApiUpdateUserAlreadyAuthorized,
 } from '../../../api/types';
-import { initPluginManager } from '../../../plugins/pluginManagerInstance';
+import { initPluginManager } from '../../../prisma/plugins/pluginManagerInstance';
 import type { LangCode } from '../../../types';
 import type { RequiredGlobalActions } from '../../index';
 import type { ActionReturnType, GlobalState } from '../../types';

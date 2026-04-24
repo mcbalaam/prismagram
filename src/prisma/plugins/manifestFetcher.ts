@@ -1,5 +1,5 @@
-import type { Capability, PluginManifest } from './types';
-import { parseToml } from './tomlParser';
+import type { Capability, PluginManifest } from '../types';
+import { parseToml } from '../tomlParser';
 
 export type RemotePluginEntry = {
   id: string;

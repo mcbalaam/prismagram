@@ -80,7 +80,7 @@ import type {
 import type { RegularLangFnParameters } from '../../util/localization';
 import type { SharedState } from './sharedState';
 import type { TabState } from './tabState';
-import type { PluginRecord } from '../../plugins/types';
+import type { PluginRecord } from '../../prisma/types';
 
 export type GlobalState = {
   cacheVersion: number;

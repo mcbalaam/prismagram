@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from '../../lib/teact/teact';
 
-import type { SlotClickContext, SlotId } from '../../plugins/types';
-import { getContributions, subscribeToSlot } from '../../plugins/slotRegistry';
-import type { RegisteredContribution } from '../../plugins/slotRegistry';
+import type { SlotClickContext, SlotId } from '../../prisma/types';
+import { getContributions, subscribeToSlot } from '../../prisma/slotRegistry';
+import type { RegisteredContribution } from '../../prisma/slotRegistry';
 
 import Button from '../ui/Button';
 import Icon from '../common/icons/Icon';

@@ -3,8 +3,8 @@ import type { ActionReturnType, GlobalState } from '../../types';
 import { addCallback } from '../../../lib/teact/teactn';
 import { addActionHandler, getGlobal, setGlobal } from '../../index';
 import { selectCurrentMessageList } from '../../selectors';
-import { broadcastUiEvent } from '../../../plugins/eventBus';
-import { getPluginManager } from '../../../plugins/pluginManagerInstance';
+import { broadcastUiEvent } from '../../../prisma/eventBus';
+import { getPluginManager } from '../../../prisma/plugins/pluginManagerInstance';
 
 let prevChatIdByTabId: Record<number, string | undefined> = {};
 

@@ -3188,10 +3188,10 @@ export interface ActionPayloads {
   loadPlugin: { pluginId: string };
   unloadPlugin: { pluginId: string };
   setPluginDevMode: { isDevMode: boolean };
-  updatePluginRecords: { byId: Record<string, import('../../plugins/types').PluginRecord> };
+  updatePluginRecords: { byId: Record<string, import('../../prisma/types').PluginRecord> };
   installPlugin: {
-    manifest: import('../../plugins/types').PluginManifest;
-    grantedCapabilities: import('../../plugins/types').Capability[];
+    manifest: import('../../prisma/types').PluginManifest;
+    grantedCapabilities: import('../../prisma/types').Capability[];
     source: string;
   };
   removePlugin: { pluginId: string };

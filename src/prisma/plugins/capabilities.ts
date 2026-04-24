@@ -1,8 +1,9 @@
-import type { Capability, HostApiMethod } from './types';
+import type { Capability, HostApiMethod } from '../types';
 
 const METHOD_CAPABILITY_MAP: Record<HostApiMethod, Capability> = {
   'messages.send': 'messages:send',
   'messages.getActive': 'messages:read:active-chat',
+  'messages.delete': 'messages:delete',
   'events.subscribe': 'events:message',
   'events.unsubscribe': 'events:message',
   'storage.get': 'storage:config',

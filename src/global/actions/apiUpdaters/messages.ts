@@ -2,8 +2,8 @@ import type {
   ApiMediaExtendedPreview, ApiMessage, ApiReactions,
   MediaContent,
 } from '../../../api/types';
-import { broadcastDeleteEvent, broadcastMessageEvent } from '../../../plugins/eventBus';
-import { normalizeMessage } from '../../../plugins/normalizer';
+import { broadcastDeleteEvent, broadcastMessageEvent } from '../../../prisma/eventBus';
+import { normalizeMessage } from '../../../prisma/normalizer';
 import type { ActiveEmojiInteraction, ThreadId } from '../../../types';
 import type { RequiredGlobalActions } from '../../index';
 import type {

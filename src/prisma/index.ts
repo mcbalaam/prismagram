@@ -13,8 +13,8 @@ export type {
   SlotContribution,
 } from './types';
 
-export { PluginManager } from './PluginManager';
-export { PluginHost } from './PluginHost';
+export { PluginManager } from './plugins/PluginManager';
+export { PluginHost } from './plugins/PluginHost';
 export { PluginRpcClient } from './rpc/channel';
 export { broadcastMessageEvent, broadcastUiEvent, broadcastDeleteEvent } from './eventBus';
 export { normalizeMessage } from './normalizer';
@@ -24,4 +24,4 @@ export {
   getContributions, subscribeToSlot,
 } from './slotRegistry';
 export type { RegisteredContribution } from './slotRegistry';
-export { checkCapability, checkEventCapability, resolveGrantedCapabilities } from './capabilities';
+export { checkCapability, checkEventCapability, resolveGrantedCapabilities } from './plugins/capabilities';

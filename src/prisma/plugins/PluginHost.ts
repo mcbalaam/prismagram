@@ -6,19 +6,19 @@ import type {
   PluginManifest,
   SlotContribution,
   SlotId,
-} from './types';
-import { PluginRpcChannel } from './rpc/channel';
-import { PRISMA_SDK_SOURCE } from './sdk/prisma-sdk-source';
+} from '../types';
+import { PluginRpcChannel } from '../rpc/channel';
+import { PRISMA_SDK_SOURCE } from '../sdk/prisma-sdk-source';
 import { checkCapability, checkEventCapability } from './capabilities';
-import { registerTarget, unregisterTarget, subscribe, unsubscribe } from './eventBus';
-import { registerBeforeHook, unregisterBeforeHook, callBeforeMessageHook } from './eventBus';
+import { registerTarget, unregisterTarget, subscribe, unsubscribe } from '../eventBus';
+import { registerBeforeHook, unregisterBeforeHook, callBeforeMessageHook } from '../eventBus';
 import {
   registerClickHandler,
   registerContribution,
   unregisterAllForPlugin,
   unregisterClickHandler,
   unregisterContribution,
-} from './slotRegistry';
+} from '../slotRegistry';
 
 const HANDLER_TIMEOUT_MS = 500;
 const MAX_CONSECUTIVE_TIMEOUTS = 3;

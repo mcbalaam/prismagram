@@ -1,7 +1,7 @@
-import { MAIN_THREAD_ID } from '../api/types';
-import { getActions, getGlobal, setGlobal } from '../global';
+import { MAIN_THREAD_ID } from '../../api/types';
+import { getActions, getGlobal, setGlobal } from '../../global';
 import type { HostApiHandlers } from './PluginHost';
-import type { PluginManifest, PluginRecord } from './types';
+import type { PluginManifest, PluginRecord } from '../types';
 import { PluginManager } from './PluginManager';
 
 let manager: PluginManager | undefined;

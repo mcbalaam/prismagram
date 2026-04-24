@@ -1,6 +1,6 @@
 import type { ActionReturnType } from '../../types';
 import { ManagementProgress } from '../../../types';
-import { destroyPluginManager } from '../../../plugins/pluginManagerInstance';
+import { destroyPluginManager } from '../../../prisma/plugins/pluginManagerInstance';
 
 import {
   CUSTOM_BG_CACHE_NAME,

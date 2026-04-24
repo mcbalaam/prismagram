@@ -174,7 +174,7 @@ import {
   selectThreadReadState,
 } from '../../selectors/threads';
 import { deleteMessages, updateWithLocalMedia } from '../apiUpdaters/messages';
-import { callBeforeMessageHook } from '../../../plugins/eventBus';
+import { callBeforeMessageHook } from '../../../prisma/eventBus';
 const AUTOLOGIN_TOKEN_KEY = 'autologin_token';
 
 const uploadProgressCallbacks = new Map<MessageKey, ApiOnProgress>();

@@ -1,8 +1,8 @@
 import { memo, useState } from '../../../lib/teact/teact';
 import { getActions } from '../../../global';
 
-import type { Capability, PluginManifest } from '../../../plugins/types';
-import { fetchManifest } from '../../../plugins/manifestFetcher';
+import type { Capability, PluginManifest } from '../../../prisma/types';
+import { fetchManifest } from '../../../prisma/plugins/manifestFetcher';
 
 import useFlag from '../../../hooks/useFlag';
 import useLang from '../../../hooks/useLang';
